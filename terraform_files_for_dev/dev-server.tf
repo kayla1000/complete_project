@@ -9,16 +9,16 @@ provider "aws" {
 }
 
 resource "aws_launch_template" "PetclinicServerLT" {
-  image_id = var.ami
-  instance_type = var.instance_type
-  key_name = var.mykey
+  image_id               = var.ami
+  instance_type          = var.instance_type
+  key_name               = var.mykey
   vpc_security_group_ids = [aws_security_group.dev-server-sg.id]
-  user_data = filebase64("development-server-userdata.sh")
+  user_data              = filebase64("development-server-userdata.sh")
 }
 
 resource "aws_instance" "PetclinicServer" {
   launch_template {
-    id = aws_launch_template.PetclinicServerLT.id
+    id      = aws_launch_template.PetclinicServerLT.id
     version = aws_launch_template.PetclinicServerLT.latest_version
   }
   tags = {
@@ -35,17 +35,17 @@ resource "aws_security_group" "dev-server-sg" {
     for_each = var.dev-server-ports
     iterator = port
     content {
-      from_port = port.value
-      to_port = port.value
-      protocol = "tcp"
+      from_port   = port.value
+      to_port     = port.value
+      protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
     }
   }
 
   egress {
-    from_port =0
-    protocol = "-1"
-    to_port =0
+    from_port   = 0
+    protocol    = "-1"
+    to_port     = 0
     cidr_blocks = ["0.0.0.0/0"]
   }
 
